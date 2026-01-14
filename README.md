@@ -2,6 +2,8 @@
 
 Sample applications for using the [Vonage Video API](https://developer.vonage.com/en/video/client-sdks/web) library with vanilla JavaScript.
 
+> Note: If you are still using OpenTok, you can still use these samples. Just replace the Vonage `APPLICATION_ID` / `applicationId` value with your OpenTok `API_KEY` / `apiKey` value.
+
 For framework examples (Angular, React, Vue etc.) please see the [Web Component example applications](https://github.com/Vonage-Community/web_components-video_api-javascript/tree/main/examples).
 For the electron app samples, these have been moved to [Vonage Community](https://github.com/Vonage-Community/sample-video-electron-app)
 
