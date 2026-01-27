@@ -36,6 +36,8 @@ The code for this sample is found the following subdirectories:
 
 * Moderate-Background-Blur ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Moderate-Background-Blur)) -- This sample application shows how to add background blur with the Vonage Video APIs and Vonage ML Transformers library.
 
+* Moderate-Background-Image ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Moderate-Background-Image)) -- This sample application shows how to replace the background with an image using the Vonage Video APIs and Vonage ML Transformers library.
+
 * Moderate-Noise-Suppression ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Moderate-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a `createVonageNoiseSuppression` from the `@vonage/noise-suppression` library.
 
 * Post-call Transcription ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Post-Call-Transcription)) -- This sample shows you how to generate a transcription from a Vonage Video session.
