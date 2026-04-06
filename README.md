@@ -1,5 +1,16 @@
 # Vonage Video API Web Samples
 
+
+## This repository is no longer maintained.
+
+This repository has moved to [https://github.com/Vonage/vonage-video-api-web-samples/](https://github.com/Vonage/vonage-video-api-web-samples/) and will no longer be updated or maintained. If you have checked out this repostitory in the past, you can update the `origin` of the repository for the new URL: 
+
+    git remote set-url origin https://github.com/Vonage/vonage-video-api-web-samples.git
+
+The sample code was last tested with [Vonage Video 2.33.1 and its assiociated releases](https://developer.vonage.com/en/video/video-release-notes?source=video#march-30-2026-%E2%80%94-react-native-sdk-update-standard-environment-video-reference-app-web-ios-android-vera-and-platform-and-developer-tools-update).
+
+## About
+
 Sample applications for using the [Vonage Video API](https://developer.vonage.com/en/video/client-sdks/web) library with vanilla JavaScript.
 
 > Note: If you are still using OpenTok, you can still use these samples. Just replace the Vonage `APPLICATION_ID` / `applicationId` value with your OpenTok `API_KEY` / `apiKey` value.
