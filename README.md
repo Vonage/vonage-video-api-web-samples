@@ -69,7 +69,7 @@ section](https://developer.vonage.com/en/video/overview) of the Vonage Video dev
 
 1. Clone this repository.
 
-2. Edit the config.js file and set the value of `SAMPLE_SERVER_BASE_URL` to the URL of a copy of our [Learninv Video Sample Server](https://github.com/Vonage-Community/sample-video-node-learning_server/). If you do not have a copy of the sample server running, some demos may allows you to set values for `APPLICATION_ID`, `SESSION_ID`, and `TOKEN`:
+2. Edit the config.js file and set the value of `SAMPLE_SERVER_BASE_URL` to the URL of a copy of our [Learning Video Sample Server](https://github.com/Vonage-Community/sample-video-node-learning_server/). If you do not have a copy of the sample server running, some demos may allows you to set values for `APPLICATION_ID`, `SESSION_ID`, and `TOKEN`:
 
 > Do we have a way to generate the session Id and token from the Vonage dashboard?
 
