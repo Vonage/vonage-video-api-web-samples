@@ -27,8 +27,7 @@ and test the application:
 When initializing the publisher, set the `videoFilter` object of the publisher's options only if media processors are supported.
 ```javascript
 // Check to see if the browser can apply the filter
-const hasVideoFilterSupport = await OT.hasMediaProcessorSupport('video');
-if (hasVideoFilterSupport) {
+if (OT.hasMediaProcessorSupport('video')) {
     publisherOptions.videoFilter = {
         type: 'backgroundBlur',
         blurStrength: 'high'

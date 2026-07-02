@@ -34,8 +34,7 @@ const initializeSession = async () => {
     };
 
     // Check to see if the browser can apply the filter
-    const hasVideoFilterSupport = await OT.hasMediaProcessorSupport('video');
-    if (hasVideoFilterSupport) {
+    if (OT.hasMediaProcessorSupport('video')) {
       publisherOptions.videoFilter = {
         type: 'backgroundBlur',
         blurStrength: 'high'

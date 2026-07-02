@@ -8,8 +8,7 @@ let sessionId;
 let token;
 
 async function initializeSession() {
-  const hasAudioFilterSupport = await OT.hasMediaProcessorSupport('audio');
-  if (!hasAudioFilterSupport) {
+  if (!OT.hasMediaProcessorSupport('audio')) {
     enableBtn.style.display = 'none';
     disableBtn.style.display = 'none';
     console.log('Browser does not support media processors');
