@@ -11,7 +11,7 @@
     "broadcast",
     "webrtc"
   ],
-  "author": "Chris Tankersley <chris@ctankersley.com>",
+  "author": "Video Platform Clients <video.clients@vonage.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/vonage-community/video-api-web-samples/issues"
