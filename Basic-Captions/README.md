@@ -7,7 +7,7 @@ subscribe to a stream, and publish captions to a session.
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage-Community/video-api-web-samples/tree/main/Basic-Captions)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/main/Basic-Captions)
 
 Enter your credentials in `config.js` and the application will work.
 
@@ -63,7 +63,7 @@ if (SAMPLE_SERVER_BASE_URL) {
     // Initialize an Vonage Video Session object
     initializeSession();
   }).catch((error) => {
-    handleError(error);
+    console.error(error);
     alert('Failed to get Vonage Video applicationId, sessionId and token. Make sure you have updated the config.js file.');
   });
 }
@@ -80,7 +80,7 @@ async function startCaptions() {
     captionsStopBtn.style.display = 'inline';
   }
   catch(error){
-    handleError(error);
+    console.error(error);
   }
 }
 ```
@@ -108,7 +108,7 @@ async function stopCaptions() {
   } catch (error) {
     captionsStartBtn.style.display = 'none';
     captionsStopBtn.style.display = 'inline';
-    handleError(error);
+    console.error(error);
   }
 }
 ```
@@ -131,7 +131,7 @@ async function postData(url='', data={}) {
     return response.json();
   }
   catch (error){
-    handleError(error);
+    console.error(error);
   }
 }
 ```
