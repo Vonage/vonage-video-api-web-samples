@@ -4,7 +4,7 @@ This sample application shows how to use the background Noise Suppression featur
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/Basic-Noise-Suppression)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/main/Basic-Noise-Suppression)
 
 Enter your credentials in `config.js` and the application will work.
 
@@ -25,12 +25,12 @@ After connecting to the session, and publishing the audio-video stream:
 
 ```javascript
 // enable Noise Suppression
-publisher.applyAudioFilter({
+await publisher.applyAudioFilter({
   type: 'advancedNoiseSuppression',
 });
 
 // disable Noise Suppression
-publisher.clearAudioFilter();
+await publisher.clearAudioFilter();
 ```
 
 ## Enable Noise Suppression from the start
@@ -47,10 +47,9 @@ You can enable Noise Suppression as soon as a person starts publishing their aud
       type: 'advancedNoiseSuppression'
     }
   };
-  const publisher = OT.initPublisher(
+  const publisher = await OT.initPublisher.promise(
     'publisher',
-    publisherOptions,
-    handleError
+    publisherOptions
   );
 ```
 
