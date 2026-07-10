@@ -6,7 +6,7 @@ conference dial-in numbers or directly call someone to add them to a video call.
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/SIP)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/main/SIP)
 
 Enter in the URL for a server running the [Vonage Video Learning Server](https://github.com/Vonage-Community/sample-video-node-learning_server/) into the `js/config.js` file.
 

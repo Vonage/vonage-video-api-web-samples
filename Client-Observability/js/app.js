@@ -10,20 +10,11 @@ const publishVideoTrueBtn = document.querySelector('#publish-video-true');
 const publishVideoFalseBtn = document.querySelector('#publish-video-false');
 const subscriberContainer = document.querySelector('#subscriber');
 
-function handleError(error) {
-  if (error) {
-    console.error(error);
-  }
-}
-
 function startInterval(subscriber) {
   let intervalId;
-  intervalId = setInterval(() => {
-    subscriber.getStats((error, stats) => {
-      if (error) {
-        console.error('Error getting subscriber stats. ', error.message);
-        return;
-      }
+  intervalId = setInterval(async () => {
+    try {
+      const stats = await subscriber.getStats();
       if (stats.senderStats) {
         document.querySelector(`#subscriber-client-observability-${subscriber.streamId}`).innerHTML = `
           Timestamp: ${stats.timestamp}<br>
@@ -33,16 +24,18 @@ function startInterval(subscriber) {
       } else {
         console.log("Sender stats not available yet.");
       }
-    });
+    } catch (error) {
+      console.error('Error getting subscriber stats. ', error.message);
+    }
   }, 1000);
   intervalIds[subscriber.streamId] = intervalId;
 }
 
-function initializeSession() {
+async function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
@@ -58,8 +51,12 @@ function initializeSession() {
     subscriberDiv.appendChild(subscriberClientObservabilityLabel);
     subscriberContainer.appendChild(subscriberDiv);
 
-    const subscriber = session.subscribe(event.stream, `subscriber-${event.stream.id}`, subscriberOptions, handleError);
-    startInterval(subscriber);
+    try {
+      const subscriber = await session.subscribe.promise(event.stream, `subscriber-${event.stream.id}`, subscriberOptions);
+      startInterval(subscriber);
+    } catch (error) {
+      console.error('Error subscribing to stream: ', error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
@@ -72,52 +69,50 @@ function initializeSession() {
     document.getElementById(`subscriber-${event.stream.id}`).remove();
   });
 
-  // initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append',
-    width: '100%',
-    height: '100%',
-    resolution: '1280x720',
-    publishSenderStats: true // enable sender-side statistics
-  };
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+  try {
+    // initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%',
+      resolution: '1280x720',
+      publishSenderStats: true // enable sender-side statistics
+    };
+    const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
 
-  // fires if user revokes permission to camera and/or microphone
-  publisher.on('accessDenied', (event) => {
-    alert(event?.message);
-  });
-  
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
-    }
-  });
+    // fires if user revokes permission to camera and/or microphone
+    publisher.on('accessDenied', (event) => {
+      alert(event?.message);
+    });
+    
+    // Connect to the session
+    await session.connect.promise(token);
 
-  publishVideoTrueBtn.addEventListener('click',() => {
-    publisher.publishVideo(true, (error) => {
-      if (error) {
-        handleError(error);
-      } else {
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+
+    publishVideoTrueBtn.addEventListener('click', async () => {
+      try {
+        await publisher.publishVideo.promise(true);
         publishVideoTrueBtn.style.display = 'none';
         publishVideoFalseBtn.style.display = 'block';
+      } catch (error) {
+        console.error(error);
       }
     });
-  });
 
-  publishVideoFalseBtn.addEventListener('click',() => {
-    publisher.publishVideo(false, (error) => {
-      if (error) {
-          alert('error: ', error);
-      } else {
+    publishVideoFalseBtn.addEventListener('click', async () => {
+      try {
+        await publisher.publishVideo.promise(false);
         publishVideoFalseBtn.style.display = 'none';
         publishVideoTrueBtn.style.display = 'block';
+      } catch (error) {
+        alert('error: ', error);
       }
     });
-  });
+  } catch (error) {
+    console.error(error);
+  }
 
 }
 
@@ -138,7 +133,7 @@ if (APPLICATION_ID && TOKEN && SESSION_ID) {
     // Initialize an Vonage Video Session object
     initializeSession();
   }).catch((error) => {
-    handleError(error);
+    console.error(error);
     alert('Failed to get Vonage Video sessionId and token. Make sure you have updated the config.js file.');
   });
 }
