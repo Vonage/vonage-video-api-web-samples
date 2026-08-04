@@ -5,7 +5,7 @@ This sample application demonstrates the [`qualityScoreChanged`](https://vonage.
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/In-Call-Monitoring)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/main/In-Call-Monitoring)
 
 Enter your credentials in `config.js` and the application will work.
 

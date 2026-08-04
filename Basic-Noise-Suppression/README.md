@@ -4,7 +4,7 @@ This sample application shows how to use the background Noise Suppression featur
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/Basic-Noise-Suppression)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/main/Basic-Noise-Suppression)
 
 Enter your credentials in `config.js` and the application will work.
 
