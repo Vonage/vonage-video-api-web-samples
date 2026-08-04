@@ -53,7 +53,7 @@ _**IMPORTANT:** If you deploy this demo, the hosting service MUST use HTTPS to s
 
 ## Quick start
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/Live-Broadcast)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/callback-examples/Live-Broadcast)
 
 The web page that loads the sample app for JavaScript must be served over HTTP/HTTPS. Browser
 security limitations prevent you from publishing video using a `file://` path. To

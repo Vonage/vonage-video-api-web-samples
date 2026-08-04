@@ -5,7 +5,7 @@ This sample application demonstrates the [`audioInputDeviceChanged`](https://von
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/Audio-Input-Device-Changed)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/callback-examples/Audio-Input-Device-Changed)
 
 > Note: There is a devDependency `sirv-cli` in the project that is only necessary to run the demo on StackBlitz.
 

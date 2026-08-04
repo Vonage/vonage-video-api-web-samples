@@ -7,7 +7,7 @@ This sample application shows how to connect to a Vonage [end-to-end media encry
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/End-To-End-Media-Encryption)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/callback-examples/End-To-End-Media-Encryption)
 
 - Enter your credentials in `config.js` and the application will load.
 - Click "Open in New Tab" twice.
@@ -94,7 +94,7 @@ For more information, see the main README file of this repository.
 
 ## Connecting to the session
 
-This application works very much in the same way as the [Basic Video Chat Web Sample](https://github.com/Vonage-Community/video-api-web-samples/tree/main/Basic%20Video%20Chat).
+This application works very much in the same way as the [Basic Video Chat Web Sample](https://github.com/Vonage/vonage-video-api-web-samples/tree/callback-examples/Basic%20Video%20Chat).
 
 The main difference is in the way the session is initialized.
 

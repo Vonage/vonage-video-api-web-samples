@@ -1,11 +1,11 @@
 Vonage Video Bi-directional Audio Connector Sample
 =======================
 
-This sample application demonstrates the Bi-directional Audio Connector feature in Vonage Video. This means that you can send and receive audio streams in a video call. This sample application is built off the [Basic Video Chat](https://github.com/Vonage-Community/video-api-web-samples/tree/main/Basic%20Video%20Chat). It adds an "echo" WebSocket server that receives an audio stream and sends back the same stream to be published in the session. When you run the application and click the "start bi-directional Audio Connector", another participant will join the video call and echo what you say. See the [Vonage Video documentation](https://developer.vonage.com/en/video/guides/audio-connector#publishing-audio-to-a-session-via-the-websocket) for more information.
+This sample application demonstrates the Bi-directional Audio Connector feature in Vonage Video. This means that you can send and receive audio streams in a video call. This sample application is built off the [Basic Video Chat](https://github.com/Vonage/vonage-video-api-web-samples/tree/callback-examples/Basic%20Video%20Chat). It adds an "echo" WebSocket server that receives an audio stream and sends back the same stream to be published in the session. When you run the application and click the "start bi-directional Audio Connector", another participant will join the video call and echo what you say. See the [Vonage Video documentation](https://developer.vonage.com/en/video/guides/audio-connector#publishing-audio-to-a-session-via-the-websocket) for more information.
 
 ## Demo
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Vonage-Community/video-api-web-samples/tree/main/Bidirectional-Audio-Connector)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Vonage/vonage-video-api-web-samples/tree/callback-examples/Bidirectional-Audio-Connector)
 
 > Note: On the "Create a new codespace" screen, under "Dev container configuration" please select "Bidirectional audio connector"
 
