@@ -29,7 +29,7 @@ if (OT.hasEndToEndEncryptionSupport()) {
   handleError('Encryption not supported!');
 }
 
-function initializeSession() {
+async function initializeSession() {
   console.log('initializeSession');
   if (!session) {
     session = OT.initSession(applicationId, sessionId, {
@@ -123,7 +123,7 @@ enterBtn.addEventListener('click', () => {
     applicationId = APPLICATION_ID;
     sessionId = SESSION_ID;
     token = TOKEN;
-    initializeSession();
+    initializeSession().catch(handleError);
   } else if (SAMPLE_SERVER_BASE_URL) {
     // Make a GET request to get the Vonage Video Application ID, session ID, and token from the server
     fetch(SAMPLE_SERVER_BASE_URL + '/session?e2ee=true')
@@ -133,7 +133,7 @@ enterBtn.addEventListener('click', () => {
       sessionId = json.sessionId;
       token = json.token;
       // Initialize an Vonage Video Session object
-      initializeSession();
+      initializeSession().catch(handleError);
     }).catch((error) => {
       handleError(error);
       alert('Failed to get Vonage Video sessionId and token. Make sure you have updated the config.js file.');
