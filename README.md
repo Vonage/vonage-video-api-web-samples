@@ -11,59 +11,59 @@ For the electron app samples, these have been moved to [Vonage Community](https:
 
 The code for this sample is found the following subdirectories:
 
-* Advanced-Noise-Suppression ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Advanced-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a `NoiseSuppressionTransformer` from the `@vonage/noise-suppression` library along with the `MediaProcessor` and `MediaProcessorConnector` from `@vonage/media-processor`. This method allows for additional audio transformers to be applied.
+* Advanced-Noise-Suppression ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Advanced-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a `NoiseSuppressionTransformer` from the `@vonage/noise-suppression` library along with the `MediaProcessor` and `MediaProcessorConnector` from `@vonage/media-processor`. This method allows for additional audio transformers to be applied.
 
-* Archiving ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Archiving)) -- This sample shows you how to record a Vonage Video session.
+* Archiving ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Archiving)) -- This sample shows you how to record a Vonage Video session.
 
-* Audio-Input-Device-Changed ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Audio-Input-Device-Changed)) -- This sample application demonstrates the audioInputDeviceChanged event that allows the developer to alert their users whenever their microphone changes.
+* Audio-Input-Device-Changed ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Audio-Input-Device-Changed)) -- This sample application demonstrates the audioInputDeviceChanged event that allows the developer to alert their users whenever their microphone changes.
 
-* Basic-Audio-Transformer ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic-Audio-Transformer)) -- This sample application shows how to use a basic audio transformer with the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a low-pass filter to the published audio.
+* Basic-Audio-Transformer ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic-Audio-Transformer)) -- This sample application shows how to use a basic audio transformer with the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a low-pass filter to the published audio.
 
-* Basic-Background-Blur ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic-Background-Blur)) -- This sample application shows how to add background blur with the Vonage Video APIs.
+* Basic-Background-Blur ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic-Background-Blur)) -- This sample application shows how to add background blur with the Vonage Video APIs.
 
-* Basic-Captions ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic-Captions)) -- This sample application shows how to add real-time captions with the Vonage Video APIs.
+* Basic-Captions ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic-Captions)) -- This sample application shows how to add real-time captions with the Vonage Video APIs.
 
-* Basic-Noise-Suppression ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but adds the `applyAudioFilter`, `clearAudioFilter`, and `getAudioFilter` methods on the Publisher Object.
+* Basic-Noise-Suppression ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but adds the `applyAudioFilter`, `clearAudioFilter`, and `getAudioFilter` methods on the Publisher Object.
 
-* Basic-Video-Transformer ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic-Video-Transformer)) -- This sample application shows how to use a basic video transformer with the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a threshold processor to the published video.
+* Basic-Video-Transformer ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic-Video-Transformer)) -- This sample application shows how to use a basic video transformer with the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a threshold processor to the published video.
 
-* Basic Video Chat ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic%20Video%20Chat)) -- This sample shows you how to connect to a Vonage Video session, publish a stream, and
+* Basic Video Chat ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic%20Video%20Chat)) -- This sample shows you how to connect to a Vonage Video session, publish a stream, and
   subscribe to a stream.
 
-* Basic-Video-Zoom ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Basic-Video-Zoom)) -- This sample shows you how to use a video transformer to zoom and center a publisher.
+* Basic-Video-Zoom ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Basic-Video-Zoom)) -- This sample shows you how to use a video transformer to zoom and center a publisher.
 
-* In-Call-Monitoring ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/In-Call-Monitoring)) -- This sample application demonstrates the qualityScoreChanged (based on the subscriber's audio/video MOS) and cpuPerformanceChanged (real-time indication of device performance related to CPU pressure) events.
+* In-Call-Monitoring ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/In-Call-Monitoring)) -- This sample application demonstrates the qualityScoreChanged (based on the subscriber's audio/video MOS) and cpuPerformanceChanged (real-time indication of device performance related to CPU pressure) events.
 
-* Live-Broadcast ([source](https://github.com/Vonage-Community/video-api-web-samples/tree/main/Live-Broadcast)) -- This sample shows you how to do a live broadcast using WebRTC, HLS, and RTMP.
+* Live-Broadcast ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Live-Broadcast)) -- This sample shows you how to do a live broadcast using WebRTC, HLS, and RTMP.
 
-* Moderate-Background-Blur ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Moderate-Background-Blur)) -- This sample application shows how to add background blur with the Vonage Video APIs and Vonage ML Transformers library.
+* Moderate-Background-Blur ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Moderate-Background-Blur)) -- This sample application shows how to add background blur with the Vonage Video APIs and Vonage ML Transformers library.
 
-* Moderate-Background-Image ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Moderate-Background-Image)) -- This sample application shows how to replace the background with an image using the Vonage Video APIs and Vonage ML Transformers library.
+* Moderate-Background-Image ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Moderate-Background-Image)) -- This sample application shows how to replace the background with an image using the Vonage Video APIs and Vonage ML Transformers library.
 
-* Moderate-Noise-Suppression ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Moderate-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a `createVonageNoiseSuppression` from the `@vonage/noise-suppression` library.
+* Moderate-Noise-Suppression ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Moderate-Noise-Suppression)) -- This sample application shows how to add a background Noise Suppression feature to the Vonage Video APIs. It is very similar to the Basic Video Chat example but it adds a `createVonageNoiseSuppression` from the `@vonage/noise-suppression` library.
 
-* Post-call Transcription ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Post-Call-Transcription)) -- This sample shows you how to generate a transcription from a Vonage Video session.
+* Post-call Transcription ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Post-Call-Transcription)) -- This sample shows you how to generate a transcription from a Vonage Video session.
 
-* Publish-Canvas ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Publish-Canvas)) -- In this sample application we show you how to publish a custom stream from a Canvas tag.
+* Publish-Canvas ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Publish-Canvas)) -- In this sample application we show you how to publish a custom stream from a Canvas tag.
 
-* Publish-Video ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Publish-Video)) -- In this sample application we show you how to publish a video file to a Vonage Video session.
+* Publish-Video ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Publish-Video)) -- In this sample application we show you how to publish a video file to a Vonage Video session.
 
-* Publish-Devices ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Publish-Devices)) -- In this sample application we show you how to choose different Cameras and Microphones when publishing.
+* Publish-Devices ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Publish-Devices)) -- In this sample application we show you how to choose different Cameras and Microphones when publishing.
 
-* SIP ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/SIP)) -- In this sample application we show you how to Vonage's Voice API to provide SIP connectivity to video calls.
+* SIP ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/SIP)) -- In this sample application we show you how to Vonage's Voice API to provide SIP connectivity to video calls.
 
-* Stereo-Audio ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Stereo-Audio)) -- In this sample application we show you how to publish a stereo music file to a Vonage Video session.
+* Stereo-Audio ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Stereo-Audio)) -- In this sample application we show you how to publish a stereo music file to a Vonage Video session.
 
-* Signaling ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Signaling)) -- This sample shows you how to use the Vonage Video Signaling API to implement text chat.
+* Signaling ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Signaling)) -- This sample shows you how to use the Vonage Video Signaling API to implement text chat.
 
-* Stream-Filter ([source](https://github.com/vonage-community/video-api-web-samples/tree/main/Stream-Filter)) -- This sample shows you how to apply custom grayscale, sepia and invert filters.
+* Stream-Filter ([source](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Stream-Filter)) -- This sample shows you how to apply custom grayscale, sepia and invert filters.
 
 See the README file in each of these subdirectories for application-specific notes.
 
 Each of these sample applications are described in the [Web tutorials
 section](https://developer.vonage.com/en/video/overview) of the Vonage Video developer center.
 
-**Not seeing a sample application for what you are trying to do? [File a new issue](https://github.com/vonage-community/video-api-web-samples/issues/new?labels=new%20sample%20request) or upvote [an existing one](https://github.com/vonage-community/video-api-web-samples/labels/new%20sample%20request).**
+**Not seeing a sample application for what you are trying to do? [File a new issue](https://github.com/Vonage/vonage-video-api-web-samples/issues/new?labels=new%20sample%20request) or upvote [an existing one](https://github.com/Vonage/vonage-video-api-web-samples/labels/new%20sample%20request).**
 
 ## Configuring the application
 

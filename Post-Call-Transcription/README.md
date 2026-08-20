@@ -1,11 +1,11 @@
 Vonage Video Post-Call Transcription Sample
 ===========================
 
-This sample application shows how to get a transcription from a recorded Vonage Video session. The code is very similar to the [Archiving](https://github.com/Vonage-Community/video-api-web-samples/tree/main/Archiving) sample application since an Archive needs to be started in order to generate a transcription.
+This sample application shows how to get a transcription from a recorded Vonage Video session. The code is very similar to the [Archiving](https://github.com/Vonage/vonage-video-api-web-samples/tree/main/Archiving) sample application since an Archive needs to be started in order to generate a transcription.
 
 ## Demo
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/vonage-community/video-api-web-samples/tree/main/Post-Call-Transcription)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/fork/github/Vonage/vonage-video-api-web-samples/tree/main/Post-Call-Transcription)
 
 Enter your credentials in `config.js` and the application will work.
 
