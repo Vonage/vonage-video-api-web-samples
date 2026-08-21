@@ -1,5 +1,5 @@
 Vonage Video Basic Background Blur
-=======================
+==================================
 
 This sample application shows how to add background blur with the Vonage
 Video APIs. It is very similar to the [Basic Video Chat](../Basic%20Video%20Chat/) example, but it adds a background blur to the publisher in browsers that support media processors. 
@@ -26,7 +26,7 @@ and test the application:
 
 When initializing the publisher, set the `videoFilter` object of the publisher's options only if media processors are supported.
 ```javascript
-if (OT.hasMediaProcessorSupport()) {
+if (OT.hasMediaProcessorSupport('video')) {
     publisherOptions.videoFilter = {
         type: 'backgroundBlur',
         blurStrength: 'high'

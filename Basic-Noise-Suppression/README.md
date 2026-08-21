@@ -25,12 +25,12 @@ After connecting to the session, and publishing the audio-video stream:
 
 ```javascript
 // enable Noise Suppression
-publisher.applyAudioFilter({
+await publisher.applyAudioFilter({
   type: 'advancedNoiseSuppression',
 });
 
 // disable Noise Suppression
-publisher.clearAudioFilter();
+await publisher.clearAudioFilter();
 ```
 
 ## Enable Noise Suppression from the start
@@ -47,10 +47,9 @@ You can enable Noise Suppression as soon as a person starts publishing their aud
       type: 'advancedNoiseSuppression'
     }
   };
-  const publisher = OT.initPublisher(
+  const publisher = await OT.initPublisher.promise(
     'publisher',
-    publisherOptions,
-    handleError
+    publisherOptions
   );
 ```
 
