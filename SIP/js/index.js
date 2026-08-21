@@ -11,31 +11,30 @@
             });
 
         const session = OT.initSession(credentials.applicationId, credentials.sessionId);
-        
-        session.connect(credentials.token, (error) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
 
-            const publisher = OT.initPublisher('publisher', {
+        try {
+            await session.connect.promise(credentials.token);
+            const publisher = await OT.initPublisher.promise('publisher', {
                 insertMode: 'append',
                 width: '100%',
                 height: '100%'
-            }, (error) => {
-                if (error) { console.error(error) };
-            })
-
-            session.publish(publisher);
-        })
-
-        session.on('streamCreated', (event) => {
-            session.subscribe(event.stream, 'subscribers', {
-                insertMode: 'append',
-                height: '100%',
-                width: '100%'
             });
-        })
+            await session.publish.promise(publisher);
+        } catch (error) {
+            console.error(error);
+        }
+
+        session.on('streamCreated', async (event) => {
+            try {
+                await session.subscribe.promise(event.stream, 'subscribers', {
+                    insertMode: 'append',
+                    height: '100%',
+                    width: '100%'
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        });
 
         document.getElementById('btn-dial-conference').addEventListener('click', async () => {
             const resp = await fetch(`${SAMPLE_SERVER_BASE_URL}/sip/session/dial`, {
@@ -44,7 +43,7 @@
             .then(res => res.json())
 
             console.log(resp);
-        })
+        });
 
         document.getElementById('btn-dial-number').addEventListener('click', async () => {
             const msisdn = document.getElementById('phone').value;
@@ -60,7 +59,7 @@
             .then(res => res.json())
 
             console.log(resp);
-        })
+        });
 
         document.getElementById('btn-disconnect-conference').addEventListener('click', async () => {
             const resp = await fetch(`${SAMPLE_SERVER_BASE_URL}/sip/session/hangup`, {
@@ -69,6 +68,6 @@
                 .then(res => res.json())
 
             console.log(resp);
-        })
+        });
     });
 })();
