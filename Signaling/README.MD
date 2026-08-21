@@ -1,5 +1,5 @@
 Vonage Video Signaling Sample
-===========================
+=============================
 
 This sample application shows the use the Vonage Video signaling API to implement text chat.
 
@@ -35,19 +35,18 @@ In our application, when the user enters text in the input text field, the follo
 executed:
 
 ```javascript
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
 
-    session.signal({
-        type: 'msg',
-        data: msgTxt.value
-    }, (error) => {
-        if (error) {
-            handleError(error);
-        } else {
-            msgTxt.value = '';
-        }
+  try {
+    await session.signal({
+      type: 'msg',
+      data: msgTxt.value
     });
+    msgTxt.value = '';
+  } catch (error) {
+    console.error(error);
+  }
 });
 ```
 

@@ -6,76 +6,73 @@ let session;
 let sessionId;
 let token;
 
-function handleError(error) {
-  if (error) {
-    console.error(error);
-  }
-}
-
-function initializeSession() {
+async function initializeSession() {
   session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
     console.error('You were disconnected from the session.', event.reason);
   });
 
-  // Initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append',
-    width: '100%',
-    height: '100%'
-  };
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+  try {
+    // Initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%'
+    };
+    const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
-    }
-  });
+    // Connect to the session
+    await session.connect.promise(token);
 
-  // Receive a message and append it to the history
-  const msgHistory = document.querySelector('#history');
-  session.on('signal:msg', (event) => {
-    const msg = document.createElement('p');
-    msg.textContent = event.data;
-    msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
-    msgHistory.appendChild(msg);
-    msg.scrollIntoView();
-  });
-}
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+
+    // Receive a message and append it to the history
+    const msgHistory = document.querySelector('#history');
+    session.on('signal:msg', (event) => {
+      const msg = document.createElement('p');
+      msg.textContent = event.data;
+      msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
+      msgHistory.appendChild(msg);
+      msg.scrollIntoView();
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // Text chat
 const form = document.querySelector('form');
 const msgTxt = document.querySelector('#msgTxt');
 
 // Send a signal once the user enters data in the form
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  session.signal({
-    type: 'msg',
-    data: msgTxt.value
-  }, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      msgTxt.value = '';
-    }
-  });
+  try {
+    await session.signal({
+      type: 'msg',
+      data: msgTxt.value
+    });
+    msgTxt.value = '';
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // See the config.js file.
@@ -95,7 +92,7 @@ if (APPLICATION_ID && TOKEN && SESSION_ID) {
     // Initialize a Vonage Video Session object
     initializeSession();
   }).catch((error) => {
-    handleError(error);
+    console.error(error);
     alert('Failed to get Vonage Video sessionId and token. Make sure you have updated the config.js file.');
   });
 }

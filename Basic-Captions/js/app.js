@@ -15,12 +15,6 @@ const captionsStopBtn = document.querySelector('#stop');
 const captionsBox = document.querySelector('#captions-box');
 const captionsText = document.querySelector('#captions-text');
 
-function handleError(error) {
-  if (error) {
-    console.error(error);
-  }
-}
-
 async function initializeSession() {
   let session = OT.initSession(applicationId, sessionId);
 
@@ -32,18 +26,17 @@ async function initializeSession() {
       height: '100%',
       testNetwork: true,
     };
-    subscriber = session.subscribe(
-      event.stream,
-      'subscriber',
-      subscriberOptions,
-      handleError
-    );
+     try {
+      subscriber = await session.subscribe.promise(
+        event.stream,
+        'subscriber',
+        subscriberOptions
+      );
 
-    // add captions to the subscriber object
-    try {
+      // add captions to the subscriber object
       await subscriber.subscribeToCaptions(true);
     } catch (error) {
-      handleError(error);
+      console.error(error);
     }
 
     subscriber.on('captionReceived', (event) => {
@@ -69,27 +62,22 @@ async function initializeSession() {
     console.log('You were disconnected from the session.', event.reason);
   });
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, initialize a publisher and publish to the session
-      const publisherOptions = {
-        insertMode: 'append',
-        width: '100%',
-        height: '100%',
-        publishCaptions: true,
-      };
-      publisher = OT.initPublisher('publisher', publisherOptions, (err) => {
-        if (err) {
-          handleError(err);
-        } else {
-          session.publish(publisher, handleError);
-        }
-      });
-    }
-  });
+  try {
+    // Connect to the session
+    await session.connect.promise(token);
+    
+    // If the connection is successful, initialize a publisher and publish to the session
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%',
+      publishCaptions: true,
+    };
+    publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+    await session.publish.promise(publisher);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function postData(url = '', data = {}) {
@@ -106,7 +94,7 @@ async function postData(url = '', data = {}) {
     }
     return response.json();
   } catch (error) {
-    handleError(error);
+    console.error(error);
   }
 }
 
@@ -120,7 +108,7 @@ async function startCaptions() {
     captionsStartBtn.style.display = 'none';
     captionsStopBtn.style.display = 'inline';
   } catch (error) {
-    handleError(error);
+    console.error(error);
   }
 }
 
@@ -144,7 +132,7 @@ async function stopCaptions() {
   } catch (error) {
     captionsStartBtn.style.display = 'none';
     captionsStopBtn.style.display = 'inline';
-    handleError(error);
+    console.error(error);
   }
 }
 
@@ -164,7 +152,7 @@ if (SAMPLE_SERVER_BASE_URL) {
       initializeSession();
     })
     .catch((error) => {
-      handleError(error);
+      console.error(error);
       alert(
         'Failed to get Vonage Video applicationId, sessionId and token. Make sure you have updated the config.js file.'
       );
