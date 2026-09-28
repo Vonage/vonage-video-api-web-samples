@@ -135,25 +135,39 @@ For simplicity, this sample app assumes that a broadcast has already started. On
 
 ### Viewer
 
-The functions in [view.js](./js/viewer.js) retrieves the credentials from the the backend server,
-connects to the session and subscribes to the stream in progress.
+The functions in [view.js](./js/view.js) retrieve credentials from the backend server, await the Promise-based session connection, and subscribe to the host stream:
+
+```javascript
+try {
+    await session.connect.promise(credentials.token);
+
+    session.on('streamCreated', async (event) => {
+        try {
+            await session.subscribe.promise(event.stream, 'host', {
+                insertMode: 'append',
+                width: '100%',
+                height: '100%',
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
+} catch (error) {
+    console.error(error);
+}
+```
 
 ### Host
 
-The methods in [host.js](./js/host.js) retrieve the credentials from the backend server, control the broadcast stream, and creates
- the URL for viewers to watch the broadcast. The host makes calls to
-the server, which calls the Vonage Video API to start and end the broadcast. 
+The methods in [host.js](./js/host.js) retrieve credentials from the backend server, connect with `Session.connect.promise()`, and initialize the publisher with `OT.initPublisher.promise()`. The host controls the broadcast stream and creates URLs for viewers. It makes calls to the server, which calls the Vonage Video API to start and end the broadcast.
+
 For more information, see [Publishing Streams](https://developer.vonage.com/en/tutorials/publish-streams/introduction/javascript)
 and [Joining a session](https://developer.vonage.com/en/tutorials/joining-a-session/introduction/javascript).
 
-When the broadcast button is clicked, the demo submits
-a request to the server endpoint to begin the broadcast. The server endpoint relays the
-session ID to the [Video API HLS Broadcast REST](https://developer.vonage.com/en/api/video#start-broadcast)
-`/broadcast/start` endpoint, which returns broadcast data to the host. The broadcast data
-includes the broadcast URL in its JSON-encoded HTTP response:
+When the broadcast button is clicked, the demo submits a request to the server endpoint to begin the broadcast. After the request succeeds, it awaits `Session.publish.promise()` before starting status checks. The server endpoint relays the session ID to the [Video API HLS Broadcast REST](https://developer.vonage.com/en/api/video#start-broadcast) `/broadcast/start` endpoint, which returns broadcast data to the host:
 
 ```javascript
-document.getElementById('btn-start').addEventListener('click', async (el, event) => {
+document.getElementById('btn-start').addEventListener('click', async () => {
     const rtmp = [];
     if (document.getElementById('rtmpAddress').value) {
         rtmp.push({
@@ -174,23 +188,20 @@ document.getElementById('btn-start').addEventListener('click', async (el, event)
             "Content-type": "application/json"
         }
     })
-        .then(res => {
-            session.publish(publisher);
+        .then(async res => {
+            await session.publish.promise(publisher);
             shouldCheckBroadcast = true;
             setTimeout(checkBroadcast, 5000);
-            return res.json()
+            return res.json();
         })
         .catch(error => console.error(error));
 });
 ```
 
-When the broadcast is over, the "End Broadcast" button submits a request to the server,
-which invokes the [Video API Broadcast API](https://developer.vonage.com/en/api/video#stop-broadcast) `/broadcast/stop`
-endpoint, which terminates the CDN stream. This is a recommended best practice, as the default
-is that broadcasts remain active until a 120-minute timeout period has completed.
+When the broadcast is over, the End Broadcast button submits a request to the server, which invokes the [Video API Broadcast API](https://developer.vonage.com/en/api/video#stop-broadcast) `/broadcast/stop` endpoint. `Session.unpublish()` is synchronous; the replacement publisher is initialized by awaiting the Promise returned from `initPublisher()`:
 
 ```javascript
-document.getElementById('btn-end').addEventListener('click', async (el, event) => {
+document.getElementById('btn-end').addEventListener('click', async () => {
     broadcast = await fetch(`${SAMPLE_SERVER_BASE_URL}/broadcast/session/stop`, {
         method: "POST",
         body: JSON.stringify({
@@ -200,11 +211,11 @@ document.getElementById('btn-end').addEventListener('click', async (el, event) =
             "Content-type": "application/json"
         }
     })
-        .then(res => {
+        .then(async res => {
             session.unpublish(publisher);
             shouldCheckBroadcast = false;
-            publisher = initPublisher();
-            return res.json()
+            publisher = await initPublisher();
+            return res.json();
         })
         .catch(error => console.error(error));
 });

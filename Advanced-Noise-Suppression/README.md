@@ -21,10 +21,11 @@ and test the application:
 
 ## Transforming the Audio Stream
 
-After connecting to the session, and publishing the audio-video stream, transform the audio stream.
+The sample uses Promise-based Client SDK methods for publisher initialization, session connection, publication, and subscription. After publication resolves, it applies the audio transformer:
 
 ```javascript
-session.publish(publisher, () => transformStream(publisher));
+await session.publish.promise(publisher);
+await transformStream(publisher);
 ```
 
 ## Known Limitations

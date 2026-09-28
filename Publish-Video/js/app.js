@@ -11,18 +11,22 @@ function handleError(error) {
   }
 }
 
-function initializeSession() {
+async function initializeSession() {
   const stream = videoEl.captureStream();
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
@@ -30,7 +34,7 @@ function initializeSession() {
   });
 
   let publisher;
-  function publish() {
+  async function publish() {
     const videoTracks = stream.getVideoTracks();
     const audioTracks = stream.getAudioTracks();
 
@@ -44,26 +48,28 @@ function initializeSession() {
     };
     if (!publisher && videoTracks.length > 0 && audioTracks.length >= 0) {
       stream.removeEventListener('addtrack', publish);
-      publisher = OT.initPublisher('publisher', publisherOptions, (err) => {
-        if (err) {
-          videoEl.pause();
-          handleError(err)
-        } else {
-          videoEl.play();
-          // Connect to the session
-          session.connect(token, (error) => {
-            if (error) {
-              handleError(error);
-            } else {
-              // If the connection is successful, publish the publisher to the session
-              session.publish(publisher, handleError);
-            }
-          });
-        }
-      });
+      try {
+        publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+      } catch (error) {
+        videoEl.pause();
+        handleError(error);
+        return;
+      }
+
       publisher.on('destroyed', () => {
         videoEl.pause();
       });
+      videoEl.play();
+
+      try {
+        // Connect to the session
+        await session.connect.promise(token);
+
+        // If the connection is successful, publish the publisher to the session
+        await session.publish.promise(publisher);
+      } catch (error) {
+        handleError(error);
+      }
     }
   }
   stream.addEventListener('addtrack', publish);

@@ -58,12 +58,9 @@ function startInterval(subscriber) {
   );
   bitrateGraph.updateEndDate();
 
-  intervalId = setInterval(() => {
-    subscriber.getStats((error, stats) => {
-      if (error) {
-        console.error('Error getting subscriber stats. ', error.message);
-        return;
-      }
+  intervalId = setInterval(async () => {
+    try {
+      const stats = await subscriber.getStats();
       document.querySelector(
         `#chart-${subscriber.streamId}-resolution`
       ).innerText = `${subscriber.videoElement().videoWidth} x ${
@@ -79,17 +76,19 @@ function startInterval(subscriber) {
         bitrateGraph.updateEndDate();
       }
       prevStats = stats;
-    });
+    } catch (error) {
+      console.error('Error getting subscriber stats. ', error.message);
+    }
   }, 1000);
   intervalIds[subscriber.streamId] = intervalId;
 }
 
-function initializeSession() {
+async function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
   updateSubscriberNumber(0);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
@@ -105,15 +104,17 @@ function initializeSession() {
     subscriberDiv.appendChild(subscriberIdLabel);
     subscribersContainer.appendChild(subscriberDiv);
 
-    const subscriber = session.subscribe(
-      event.stream,
-      `subscriber-${event.stream.id}`,
-      subscriberOptions,
-      handleError
-    );
-
-    startInterval(subscriber);
-    updateSubscriberNumber(1);
+    try {
+      const subscriber = await session.subscribe.promise(
+        event.stream,
+        `subscriber-${event.stream.id}`,
+        subscriberOptions
+      );
+      startInterval(subscriber);
+      updateSubscriberNumber(1);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
@@ -128,29 +129,28 @@ function initializeSession() {
     updateSubscriberNumber(-1);
   });
 
-  // initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append',
-    width: '100%',
-    height: '100%',
-    resolution: '1920x1080',
-  };
+  try {
+    // initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%',
+      resolution: '1920x1080',
+    };
 
-  const publisher = OT.initPublisher(
-    'publisher',
-    publisherOptions,
-    handleError
-  );
+    const publisher = await OT.initPublisher.promise(
+      'publisher',
+      publisherOptions
+    );
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
-    }
-  });
+    // Connect to the session
+    await session.connect.promise(token);
+
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 // See the config.js file.

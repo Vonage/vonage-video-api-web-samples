@@ -128,9 +128,7 @@ session.on('sessionDisconnected', (event) => {
 
 ## Publishing an audio video stream to the session
 
-Upon successfully connecting to the Vonage Video session (see the previous section), the application publishes an 
-audio-video stream (Vonage Video Publisher object) to the session. This is done inside the completion handler for the 
-connect() method, since you should only publish to the session once you are connected to it.
+Upon successfully connecting to the Vonage Video session, the application publishes an audio-video stream (Vonage Video Publisher object). Publication is awaited after `Session.connect.promise()` resolves, so it only starts once the client is connected.
 
 The Publisher object is initialized as shown below. The `OT.initPublisher.promise()` method takes two
 optional parameters:

@@ -26,6 +26,10 @@ Also, you need to run this app on an HTTP server. Because of security restrictio
 the app does not work on a file: URL. (On macOS, you can serve the app by running
 `python3 -m http.server`.)
 
+## Promise-based Client SDK
+
+The sample awaits `OT.initPublisher.promise()`, `Session.connect.promise()`, `Session.publish.promise()`, and `Session.subscribe.promise()` before applying the zoom transformer.
+
 ## Transforming the Video Stream
 
 After connecting to the session, and publishing the audio-video stream, transform the video stream.

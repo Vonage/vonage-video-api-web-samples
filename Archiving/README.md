@@ -37,6 +37,10 @@ For this application, click the Start Archive button (in the bottom-left hand co
 to start recording the Vonage Video session. Then click the Stop Archive button to stop recording the
 session. Clicking View Archive will open a link in a new Window/Tab to view the archive.
 
+## Promise-based Client SDK
+
+The web client uses Promise-based OT Client SDK calls—`OT.initPublisher.promise()`, `Session.connect.promise()`, `Session.publish.promise()`, and `Session.subscribe.promise()`—to set up media before the archive controls are used.
+
 ## Recording the session to an archive
 
 The Vonage Video Archiving API lets you record a session's audio-video streams to MP4 files. You use

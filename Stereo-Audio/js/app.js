@@ -21,20 +21,24 @@ function handleError(error) {
   }
 }
 
-function initializeSession() {
+async function initializeSession() {
   if (session && session.isConnected()) {
     session.disconnect();
   }
   session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
@@ -44,15 +48,14 @@ function initializeSession() {
     panControls.style.display = "none";
   });
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, show publish button
-      publishButton.style.display = "block";
-    }
-  });
+  try {
+    // Connect to the session
+    await session.connect.promise(token);
+    // If the connection is successful, show publish button
+    publishButton.style.display = "block";
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 function getAudioBuffer(url, audioContext) {
@@ -96,21 +99,21 @@ function createAudioStream(audioBuffer, audioContext) {
   };
 }
 
-function publish() {
+async function publish() {
   publishButton.style.display = "none";
   panValueSlider.value = 0;
   const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-  // Create audio stream from mp3 file and video stream from webcam
-  Promise.all([
-    getAudioBuffer('./media/funkloop.mp3', audioContext),
-    OT.getUserMedia({ audioSource: null })
-  ]).then((results) => {
-    const [audioBuffer, videoStream] = results;
-    const {
-      audioStream,
-      stop
-    } = createAudioStream(audioBuffer, audioContext);
+  let stop;
+  try {
+    // Create audio stream from mp3 file and video stream from webcam
+    const [audioBuffer, videoStream] = await Promise.all([
+      getAudioBuffer('./media/funkloop.mp3', audioContext),
+      OT.getUserMedia({ audioSource: null })
+    ]);
+    const audioStreamData = createAudioStream(audioBuffer, audioContext);
+    const audioStream = audioStreamData.audioStream;
+    stop = audioStreamData.stop;
 
     // initialize the publisher
     const publisherOptions = {
@@ -127,35 +130,35 @@ function publish() {
       audioBitrate: 128000
     };
 
-    publisher = OT.initPublisher('publisher', publisherOptions, (error) => {
-      if (error) {
-        handleError(error);
-      } else {
-        // If the connection is successful, publish the publisher to the session
-        session.publish(publisher, (error) => {
-          if (error) {
-            publishButton.style.display = "block";
-            handleError(error);
-          } else {
-            unpublishButton.style.display = "block";
-            panControls.style.display = "block";
-          }
-        });
-      }
-    });
-
-    publisher.on('destroyed', () => {
-      // When the publisher is destroyed we cleanup
+    publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+  } catch (error) {
+    if (stop) {
       stop();
-      audioContext.close();
-      publishButton.style.display = "block";
-      unpublishButton.style.display = "none";
-      panControls.style.display = "none";
-    });
-  }).catch((error) => {
+    }
     audioContext.close();
-    throw error;
+    publishButton.style.display = "block";
+    handleError(error);
+    return;
+  }
+
+  publisher.on('destroyed', () => {
+    // When the publisher is destroyed we cleanup
+    stop();
+    audioContext.close();
+    publishButton.style.display = "block";
+    unpublishButton.style.display = "none";
+    panControls.style.display = "none";
   });
+
+  try {
+    // If initialization is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+    unpublishButton.style.display = "block";
+    panControls.style.display = "block";
+  } catch (error) {
+    publishButton.style.display = "block";
+    handleError(error);
+  }
 }
 
 function unpublish() {

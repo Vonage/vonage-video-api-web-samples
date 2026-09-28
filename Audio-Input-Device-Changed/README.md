@@ -13,6 +13,10 @@ This sample application demonstrates the [`audioInputDeviceChanged`](https://von
 
 * Simply open [index.html](index.html) in your browser.
 
+## Promise-based Client SDK
+
+Device enumeration is awaited with `OT.getDevices()`, and publisher initialization uses `await OT.initPublisher.promise(...)`. The existing `Publisher.setAudioSource()` device switch also returns a Promise.
+
 ## Known Limitations
 
 * `setAudioSource()` only works with browsers that support the [`replaceTrack()`](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpSender/replaceTrack) method. This means it will not work in Internet Explorer, Microsoft Edge, Chrome before version 65 and Safari before version 12.

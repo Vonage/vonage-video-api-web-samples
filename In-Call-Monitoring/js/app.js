@@ -31,54 +31,57 @@ function getRating(value) {
   }
 }
 
-function initializeSession() {
+async function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    const subscriber = session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
-    // Call Quality Sample Score https://vonage.github.io/video-docs/video-js-reference/latest/QualityScoreChangedEvent.html
-    subscriber.on('qualityScoreChanged', (scores) => {
-      mosAudioMeter.value = scores.qualityScore.audioQualityScore ? scores.qualityScore.audioQualityScore : null;
-      audioRating.value = scores.qualityScore.audioQualityScore ? `${getRating(scores.qualityScore.audioQualityScore)} (${scores.qualityScore.audioQualityScore})` : '';
-      mosVideoMeter.value = scores.qualityScore.videoQualityScore ? scores.qualityScore.videoQualityScore : null;
-      videoRating.value = scores.qualityScore.videoQualityScore ? `${getRating(scores.qualityScore.videoQualityScore)} (${scores.qualityScore.videoQualityScore})` : '';
-    });
-
+    try {
+      const subscriber = await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+      // Call Quality Sample Score https://vonage.github.io/video-docs/video-js-reference/latest/QualityScoreChangedEvent.html
+      subscriber.on('qualityScoreChanged', (scores) => {
+        mosAudioMeter.value = scores.qualityScore.audioQualityScore ? scores.qualityScore.audioQualityScore : null;
+        audioRating.value = scores.qualityScore.audioQualityScore ? `${getRating(scores.qualityScore.audioQualityScore)} (${scores.qualityScore.audioQualityScore})` : '';
+        mosVideoMeter.value = scores.qualityScore.videoQualityScore ? scores.qualityScore.videoQualityScore : null;
+        videoRating.value = scores.qualityScore.videoQualityScore ? `${getRating(scores.qualityScore.videoQualityScore)} (${scores.qualityScore.videoQualityScore})` : '';
+      });
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   // Performance Monitoring https://vonage.github.io/video-docs/video-js-reference/latest/CpuPerformanceChanged.html
   session.on('cpuPerformanceChanged', (event) => {
     cpuState.value = event.cpuPerformanceState;
   })
-  
-  // initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append',
-    width: '100%',
-    height: '100%',
-    resolution: '1280x720'
-  };
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
 
   session.on('sessionDisconnected', (event) => {
     console.log('You were disconnected from the session.', event.reason);
   });
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
-    }
-  });
+  try {
+    // initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%',
+      resolution: '1280x720'
+    };
+    const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+
+    // Connect to the session
+    await session.connect.promise(token);
+
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 // See the config.js file.

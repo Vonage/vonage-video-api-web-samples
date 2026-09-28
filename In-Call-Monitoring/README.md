@@ -86,40 +86,25 @@ For more information, see the main README file of this repository.
 
 ## Connecting to the session
 
-Upon obtaining the session ID, token, and Application ID, the app calls the `initializeSession()` method.
-First, this method initializes a Session object:
+Upon obtaining the session ID, token, and Application ID, the app calls the asynchronous `initializeSession()` method. It first initializes a Session object:
 
 ```javascript
-// Initialize Session Object
 const session = OT.initSession(applicationId, sessionId);
 ```
 
-The `OT.initSession()` method takes two parameters -- the Vonage Video Application ID and the session ID. It
-initializes and returns an Vonage Video Session object.
-
-The `connect()` method of the Session object connects the client application to the Vonage Video
-session. You must connect before sending or receiving audio-video streams in the session (or before
-interacting with the session in any way). The `connect()` method takes two parameters -- a token
-and a completion handler function:
+The `Session.connect.promise()` method connects the client to the session and resolves when the connection is complete:
 
 ```javascript
-// Connect to the session
-session.connect(token, (error) => {
-  if (error) {
-    handleError(error);
-  } else {
-    // If the connection is successful, publish the publisher to the session
-    session.publish(publisher, handleError);
-  }
-});
+try {
+  await session.connect.promise(token);
+} catch (error) {
+  handleError(error);
+}
 ```
 
-An error object is passed into the completion handler of the `Session.connect()` method if the
-client fails to connect to the Vonage Video session. Otherwise, no error object is passed in, indicating
-that the client connected successfully to the session.
+If the connection fails, the Promise rejects and execution moves to the `catch` block.
 
-The Session object dispatches a `sessionDisconnected` event when your client disconnects from the
-session. The application defines an event handler for this event:
+The Session object dispatches a `sessionDisconnected` event when the client disconnects:
 
 ```javascript
 session.on('sessionDisconnected', (event) => {
@@ -127,62 +112,54 @@ session.on('sessionDisconnected', (event) => {
 });
 ```
 
-## Publishing an audio video stream to the session
+## Publishing an audio-video stream to the session
 
-Upon successfully connecting to the Vonage Video session (see the previous section), the application publishes an 
-audio-video stream (Vonage Video Publisher object) to the session. This is done inside the completion handler for the 
-connect() method, since you should only publish to the session once you are connected to it.
-
-The Publisher object is initialized as shown below. The `OT.initPublisher()` method takes three
-optional parameters:
-
-* The target DOM element or DOM element ID for placement of the publisher video
-* The properties of the publisher
-* The completion handler
+The publisher is initialized with `OT.initPublisher.promise()`. The Promise resolves with the Publisher object when initialization succeeds:
 
 ```javascript
-// initialize the publisher
 const publisherOptions = {
   insertMode: 'append',
   width: '100%',
-  height: '100%'
+  height: '100%',
+  resolution: '1280x720'
 };
-const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
 ```
 
-Once the Publisher object is initialized and successfully connected, we publish to the session using the `publish()`
-method of the Session object:
+After connecting, the app awaits `Session.publish.promise()`:
 
 ```javascript
-session.publish(publisher, handleError);
+await session.connect.promise(token);
+await session.publish.promise(publisher);
 ```
+
+These calls are inside a `try/catch` block so initialization, connection, and publication failures are handled together.
 
 ## Subscribing to another client's audio-video stream
 
-The Session object dispatches a `streamCreated` event when a new stream (other than your own) is
-created in a session. A stream is created when a client publishes to the session. The
-`streamCreated` event is also dispatched for each existing stream in the session when you first
-connect. This event is defined by the StreamEvent object, which has a `stream` property,
-representing the stream that was created. The application adds an event listener for the
-`streamCreated` event and subscribes to all streams created in the session using the
-`Session.subscribe()` method:
+The Session object dispatches a `streamCreated` event when another client publishes a stream. The asynchronous event handler awaits `Session.subscribe.promise()`, which resolves with the Subscriber object used to register the quality monitoring event:
 
 ```javascript
-// Subscribe to a newly created stream
-session.on('streamCreated', (event) => {
+session.on('streamCreated', async (event) => {
   const subscriberOptions = {
     insertMode: 'append',
     width: '100%',
     height: '100%'
   };
-  session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+
+  try {
+    const subscriber = await session.subscribe.promise(
+      event.stream,
+      'subscriber',
+      subscriberOptions
+    );
+    subscriber.on('qualityScoreChanged', (scores) => {
+      // Update the audio and video quality meters from scores.qualityScore.
+    });
+  } catch (error) {
+    handleError(error);
+  }
 });
 ```
 
-The `Session.subscribe()` method takes four parameters:
-
-* The Stream object to which we are subscribing
-* The target DOM element or DOM element ID (optional) for placement of the subscriber video
-* A set of properties (optional) that customize the appearance of the subscriber view
-* The completion handler function (optional) that is called when the method completes
-  successfully or fails
+`Session.subscribe.promise()` takes the Stream object, an optional target element, and optional subscriber properties. It rejects if the subscription cannot be created.

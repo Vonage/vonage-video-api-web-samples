@@ -17,69 +17,70 @@ function handleError(error) {
   }
 }
 
-function initializeSession() {
+async function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
     console.log('You were disconnected from the session.', event.reason);
   });
 
-  // initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append',
-    width: '100%',
-    height: '100%',
-    resolution: '1280x720'
-  };
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+  try {
+    // initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%',
+      resolution: '1280x720'
+    };
+    const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
 
-  // fires if user revokes permission to camera and/or microphone
-  publisher.on('accessDenied', (event) => {
-    alert(event?.message);
-  });
-  
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
-    }
-  });
+    // fires if user revokes permission to camera and/or microphone
+    publisher.on('accessDenied', (event) => {
+      alert(event?.message);
+    });
 
-  publishVideoTrueBtn.addEventListener('click',() => {
-    publisher.publishVideo(true, (error) => {
-      if (error) {
-        handleError(error);
-      } else {
+    // Connect to the session
+    await session.connect.promise(token);
+
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+
+    publishVideoTrueBtn.addEventListener('click', async () => {
+      try {
+        await publisher.publishVideo.promise(true);
         publishVideoTrueBtn.style.display = 'none';
         publishVideoFalseBtn.style.display = 'block';
+      } catch (error) {
+        handleError(error);
       }
     });
-  });
 
-  publishVideoFalseBtn.addEventListener('click',() => {
-    publisher.publishVideo(false, (error) => {
-      if (error) {
-          alert('error: ', error);
-      } else {
+    publishVideoFalseBtn.addEventListener('click', async () => {
+      try {
+        await publisher.publishVideo.promise(false);
         publishVideoFalseBtn.style.display = 'none';
         publishVideoTrueBtn.style.display = 'block';
+      } catch (error) {
+        alert('error: ', error);
       }
     });
-  });
-
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 async function initializeAudioConnector() {

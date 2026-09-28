@@ -9,19 +9,22 @@
             }
         );
 
-        session.connect(credentials.token, (error) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
+        try {
+            await session.connect.promise(credentials.token);
 
-            session.on('streamCreated', (event) => {
-                session.subscribe(event.stream, 'host', {
-                    insertMode: 'append',
-                    width: '100%',
-                    height: '100%',
-                })
+            session.on('streamCreated', async (event) => {
+                try {
+                    await session.subscribe.promise(event.stream, 'host', {
+                        insertMode: 'append',
+                        width: '100%',
+                        height: '100%',
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
             });
-        });
+        } catch (error) {
+            console.log(error);
+        }
     });
 })();

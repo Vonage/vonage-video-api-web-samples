@@ -8,12 +8,9 @@
   let publisher;
 
   // Get the list of devices and populate the drop down lists
-  function populateDeviceSources(selector, kind) {
-    OT.getDevices((err, devices) => {
-      if (err) {
-        alert('getDevices error ' + err.message);
-        return;
-      }
+  async function populateDeviceSources(selector, kind) {
+    try {
+      const devices = await OT.getDevices();
       let index = 0;
       selector.innerHTML = devices.reduce((innerHTML, device) => {
         if (device.kind === kind) {
@@ -23,7 +20,9 @@
         return innerHTML;
       }, '');
       publishBtn.disabled = false;
-    });
+    } catch (err) {
+      alert('getDevices error ' + err.message);
+    }
   }
   publishBtn.disabled = true;
   // We request access to Microphones and Cameras so we can get the labels
@@ -36,24 +35,23 @@
   });
 
   // Start publishing when you click the publish button
-  publishBtn.addEventListener('click', () => {
+  publishBtn.addEventListener('click', async () => {
     // Disable the audio and video pickers and hide the publish button
     audioSelector.disabled = true;
     videoSelector.disabled = true;
     publishBtn.style.display = 'none';
 
-    // Start publishing with the selected devices
-    publisher = OT.initPublisher('publisher', {
-      audioSource: audioSelector.value,
-      videoSource: videoSelector.value
-    }, (err) => {
-      if (err) {
-        alert('Publish error ' + err.message);
-      } else {
-        setupDeviceSwitching();
-        setupAudioLevelMeter();
-      }
-    });
+    try {
+      // Start publishing with the selected devices
+      publisher = await OT.initPublisher.promise('publisher', {
+        audioSource: audioSelector.value,
+        videoSource: videoSelector.value
+      });
+      setupDeviceSwitching();
+      setupAudioLevelMeter();
+    } catch (err) {
+      alert('Publish error ' + err.message);
+    }
   });
 
   // Allow you to switch to different cameras and microphones using

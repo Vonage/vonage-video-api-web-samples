@@ -70,25 +70,30 @@ function handleError(error) {
   }
 }
 
-function initializeSession() {
+async function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
     console.log('You were disconnected from the session.', event.reason);
   });
 
-  // Request access to the microphone and camera
-  OT.getUserMedia().then((mediaStream) => {
+  try {
+    // Request access to the microphone and camera
+    const mediaStream = await OT.getUserMedia();
     const filteredCanvas = getFilteredCanvas(mediaStream);
 
     const publisherOptions = {
@@ -101,22 +106,14 @@ function initializeSession() {
       audioSource: mediaStream.getAudioTracks()[0]
     };
 
-    const publisher = OT.initPublisher('publisher', publisherOptions, (err) => {
-      if (err) {
-        filteredCanvas.stop();
-        handleError(err);
-      } else {
-        // Connect to the session
-        session.connect(token, (error) => {
-          if (error) {
-            handleError(error);
-          } else {
-            // If the connection is successful, initialize a publisher and publish to the session
-            session.publish(publisher, handleError);
-          }
-        });
-      }
-    })
+    let publisher;
+    try {
+      publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+    } catch (error) {
+      filteredCanvas.stop();
+      handleError(error);
+      return;
+    }
 
     publisher.on('destroyed', function destroyed() {
       // When the publisher is destroyed we cleanup
@@ -140,7 +137,19 @@ function initializeSession() {
         filteredCanvas.canvas.style.objectFit = window.getComputedStyle(event.element).objectFit;
       });
     }
-  });
+
+    try {
+      // Connect to the session
+      await session.connect.promise(token);
+
+      // If the connection is successful, initialize a publisher and publish to the session
+      await session.publish.promise(publisher);
+    } catch (error) {
+      handleError(error);
+    }
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 // See the config.js file.
