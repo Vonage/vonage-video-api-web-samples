@@ -138,15 +138,11 @@ async function initializeSession() {
       });
     }
 
-    try {
-      // Connect to the session
-      await session.connect.promise(token);
+    // Connect to the session
+    await session.connect.promise(token);
 
-      // If the connection is successful, initialize a publisher and publish to the session
-      await session.publish.promise(publisher);
-    } catch (error) {
-      handleError(error);
-    }
+    // If the connection is successful, initialize a publisher and publish to the session
+    await session.publish.promise(publisher);
   } catch (error) {
     handleError(error);
   }
