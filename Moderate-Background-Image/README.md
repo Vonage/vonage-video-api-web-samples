@@ -21,6 +21,10 @@ and test the application:
 * [Configuring the application](../README.md#configuring-the-application)
 * [Testing the application](../README.md#testing-the-application)
 
+## Promise-based Client SDK
+
+The sample awaits `OT.initPublisher.promise()`, `Session.connect.promise()`, `Session.publish.promise()`, and `Session.subscribe.promise()` before applying or changing the background image.
+
 ## Change the background image for the Video Stream
 
 After connecting to the session and publishing the audio-video stream, you can change the background image by replacing it with a new URI using the following code:

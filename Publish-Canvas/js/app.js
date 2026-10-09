@@ -10,17 +10,21 @@ function handleError(error) {
   }
 }
 
-function initializeSession() {
+async function initializeSession() {
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('sessionDisconnected', (event) => {
@@ -51,27 +55,29 @@ function initializeSession() {
     videoSource: canvas.captureStream(3).getVideoTracks()[0] // Use canvas.captureStream at 3 fps and pass the video track to the Publisher
   };
 
-  const publisher = OT.initPublisher('publisher', publisherOptions, (error) => {
-    if (error) {
-      clearInterval(interval);
-      handleError(error);
-      alert(error.message);
-    }
-  });
+  let publisher;
+  try {
+    publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+  } catch (error) {
+    clearInterval(interval);
+    handleError(error);
+    alert(error.message);
+    return;
+  }
 
   publisher.on('destroyed', () => {
     clearInterval(interval);
   });
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
-    }
-  });
+  try {
+    // Connect to the session
+    await session.connect.promise(token);
+
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 // See the config.js file.

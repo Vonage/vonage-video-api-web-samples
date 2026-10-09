@@ -3,12 +3,10 @@
     let shouldCheckBroadcast = false;
 
     function initPublisher() {
-        return OT.initPublisher('host', {
+        return OT.initPublisher.promise('host', {
             insertMode: 'append',
             width: '100%',
             height: '100%',
-        }, (error) => {
-            if (error) { console.log(error); }
         });
     }
 
@@ -42,21 +40,22 @@
             }
         );
 
-        session.connect(credentials.token, (error) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
+        try {
+            await session.connect.promise(credentials.token);
 
-            let publisher = initPublisher();
-
-            session.on('streamCreated', (event) => {
-                session.subscribe(event.stream, 'guest', {
-                    insertMode: 'append',
-                    width: '100%',
-                    height: '100%',
-                })
+            session.on('streamCreated', async (event) => {
+                try {
+                    await session.subscribe.promise(event.stream, 'guest', {
+                        insertMode: 'append',
+                        width: '100%',
+                        height: '100%',
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
             });
+
+            let publisher = await initPublisher();
 
             document.getElementById('btn-start').addEventListener('click', async (el, event) => {
                 const rtmp = [];
@@ -79,8 +78,8 @@
                         "Content-type": "application/json"
                     }
                 })
-                    .then(res => {
-                        session.publish(publisher);
+                    .then(async res => {
+                        await session.publish.promise(publisher);
                         shouldCheckBroadcast = true;
                         setTimeout(checkBroadcast, 5000);
                         return res.json()
@@ -98,10 +97,10 @@
                         "Content-type": "application/json"
                     }
                 })
-                    .then(res => {
+                    .then(async res => {
                         session.unpublish(publisher);
                         shouldCheckBroadcast = false;
-                        publisher = initPublisher();
+                        publisher = await initPublisher();
                         return res.json()
                     })
                     .catch(error => console.error(error));
@@ -114,6 +113,8 @@
             document.getElementById('btn-view-hls').addEventListener('click', (el, event) => {
                 window.open('/hls.html?url=' + broadcast.broadcastUrls.hls);
             })
-        });
+        } catch (error) {
+            console.error(error);
+        }
     });
 })();

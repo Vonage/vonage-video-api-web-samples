@@ -23,9 +23,11 @@ and test the application:
 
 ## Blurring the Video Stream
 
-After connecting to the session, and publishing the audio-video stream, adds background blur.
+The sample uses Promise-based Client SDK methods for publisher initialization, session connection, publication, and subscription. After publication resolves, it applies background blur:
+
 ```javascript
-session.publish(publisher, () => transformStream(publisher));
+await session.publish.promise(publisher);
+await transformStream(publisher);
 ```
 
 ## Known Limitations

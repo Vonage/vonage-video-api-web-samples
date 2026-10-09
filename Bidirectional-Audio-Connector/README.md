@@ -20,6 +20,10 @@ and test the application:
 * [Configuring the application](../README.md#configuring-the-application)
 * [Testing the application](../README.md#testing-the-application)
 
+## Promise-based Client SDK
+
+The web client awaits publisher initialization, session connection, publication, and subscription through the OT Client SDK Promise APIs. The video controls also await `Publisher.publishVideo.promise()` before updating the buttons.
+
 ## Starting the Bi-directional Audio Connector
 
 To start the Bi-directional Audio Connector, the `bidirectional` property needs to be set to `true` when starting the Audio Connector on the server.

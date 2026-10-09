@@ -37,6 +37,10 @@ For this application, click the Start Archive button (in the bottom-left hand co
 to start recording the Vonage Video session. Say a few words and then click the Stop Archive button to stop recording the
 session. For this demo, a request is made to an endpoint to get the status of the transcription every 5 seconds until it is ready and then display a download link. In a production application, a WebHook endpoint can be set up. When the transcription is ready, a request will be made to the WebHook endpoint.
 
+## Promise-based Client SDK
+
+The web client uses Promise-based OT Client SDK calls—`OT.initPublisher.promise()`, `Session.connect.promise()`, `Session.publish.promise()`, and `Session.subscribe.promise()`—to set up media before starting the archive and transcription workflow.
+
 ## Generating a transcription from a Video session
 
 To be able get a transcription using Vonage Video, these 3 options must be set accordingly:

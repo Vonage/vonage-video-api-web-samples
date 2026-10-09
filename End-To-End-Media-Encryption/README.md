@@ -108,10 +108,16 @@ const session = OT.initSession(applicationId, sessionId, {
 
 The encryption key that was entered into the page is passed into `OT.initSession`.
 
-To change the encryption key's value while connected to a session, call `setEncryptionSecret` with the new encryption key.
+To change the encryption key while connected, await the Promise returned by `Session.setEncryptionSecret()`:
 
 ```javascript
-session.setEncryptionSecret(newEncryptKeyInput.value);
+try {
+  await session.setEncryptionSecret(newEncryptKeyInput.value);
+} catch (error) {
+  handleError(error);
+}
 ```
+
+The sample also uses `Session.connect.promise()`, `OT.initPublisher.promise()`, `Session.publish.promise()`, and `Session.subscribe.promise()` for its asynchronous Client SDK setup.
 
 To learn more, please read the accompanying [blog post](https://developer.vonage.com/en/blog/adding-end-to-end-media-encryption-to-your-video-calls) and visit the [End-to-End Media Encryption Developer Documentation page](https://developer.vonage.com/en/video/guides/end-to-end-encryption/overview?lang=javascript).

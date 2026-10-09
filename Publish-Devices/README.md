@@ -13,6 +13,10 @@ In this sample application we show you how to choose an initial microphone and c
 
 * Simply open [index.html](index.html) in your browser.
 
+## Promise-based Client SDK
+
+The sample awaits `OT.getDevices()` to enumerate cameras and microphones and `OT.initPublisher.promise()` to initialize the publisher. `Publisher.setAudioSource()` and `Publisher.cycleVideo()` also return Promises.
+
 ## Known Limitations
 
 * `setAudioSource()` only works with browsers that support the [`replaceTrack()`](https://developer.mozilla.org/en-US/docs/Web/API/RTCRtpSender/replaceTrack) method. This means it will not work in Internet Explorer, Microsoft Edge, Chrome before version 65 and Safari before version 12.

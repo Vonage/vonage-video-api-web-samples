@@ -23,7 +23,7 @@ and test the application:
 
 ## Enable Subscriber Auto Resolution
 
-After a `streamCreated` event, when subscribing the stream to the session, set the `preferredResolution` to `auto` in the options object. For example:
+After a `streamCreated` event, set `preferredResolution` to `auto` in the subscriber options and await the Promise-based subscription. The Promise resolves with the `Subscriber` object:
 
 ```javascript
 const subscriberOptions = {
@@ -33,13 +33,18 @@ const subscriberOptions = {
   preferredResolution: 'auto', // add this line
 };
 
-const subscriber = session.subscribe(
-  event.stream,
-  'subscriber',
-  subscriberOptions,
-  handleError
-);
+try {
+  const subscriber = await session.subscribe.promise(
+    event.stream,
+    'subscriber',
+    subscriberOptions
+  );
+} catch (error) {
+  console.error(error);
+}
 ```
+
+The sample also awaits `Subscriber.getStats()` when updating its resolution and bitrate graph.
 
 ## Credits
 

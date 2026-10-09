@@ -26,17 +26,21 @@ const transformStream = (publisher) => {
   }
 };
 
-const initializeSession = () => {
+const initializeSession = async () => {
   const session = OT.initSession(applicationId, sessionId);
   const publisherContainer = document.getElementById('publisher');
   const subscriberContainer = document.getElementById('subscriber');
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
+      handleError(error);
+    }
   });
 
   session.on('streamPropertyChanged', (e) => {
@@ -60,22 +64,23 @@ const initializeSession = () => {
     console.log('You were disconnected from the session.', event.reason);
   });
 
-  // initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append'
-  };
+  try {
+    // initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append'
+    };
 
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+    const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
 
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
-      handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, () => transformStream(publisher));
-    }
-  });
+    // Connect to the session
+    await session.connect.promise(token);
+
+    // If the connection is successful, publish the publisher to the session
+    await session.publish.promise(publisher);
+    transformStream(publisher);
+  } catch (error) {
+    handleError(error);
+  }
 };
 
 // See the config.js file.

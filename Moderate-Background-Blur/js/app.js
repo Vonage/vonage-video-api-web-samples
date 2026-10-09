@@ -34,37 +34,42 @@ const handleError = (error) => {
   }
 };
 
-const initializeSession = () => {
+const initializeSession = async () => {
   const session = OT.initSession(applicationId, sessionId);
 
   // Subscribe to a newly created stream
-  session.on('streamCreated', (event) => {
+  session.on('streamCreated', async (event) => {
     const subscriberOptions = {
       insertMode: 'append',
       width: '100%',
       height: '100%'
     };
-    session.subscribe(event.stream, 'subscriber', subscriberOptions, handleError);
-  });
-
-  // initialize the publisher
-  const publisherOptions = {
-    insertMode: 'append',
-    width: '100%',
-    height: '100%'
-  };
-  const publisher = OT.initPublisher('publisher', publisherOptions, handleError);
-
-  // Connect to the session
-  session.connect(token, (error) => {
-    if (error) {
+    try {
+      await session.subscribe.promise(event.stream, 'subscriber', subscriberOptions);
+    } catch (error) {
       handleError(error);
-    } else {
-      // If the connection is successful, publish the publisher to the session
-      // and transform stream
-      session.publish(publisher, () => transformStream(publisher));
     }
   });
+
+  try {
+    // initialize the publisher
+    const publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%'
+    };
+    const publisher = await OT.initPublisher.promise('publisher', publisherOptions);
+
+    // Connect to the session
+    await session.connect.promise(token);
+
+    // If the connection is successful, publish the publisher to the session
+    // and transform stream
+    await session.publish.promise(publisher);
+    await transformStream(publisher);
+  } catch (error) {
+    handleError(error);
+  }
 };
 
 // See the config.js file.
